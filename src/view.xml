@@ -1,0 +1,158 @@
+<form name="formName">
+    <group name="backupDataEntity">
+        <label name="labelBackUpDataEntity" help="The Ubidots entity you want the data to be backed up from.">Backup
+            data from
+        </label>
+        <select name="filter_name" placeholder="Backup data from..." value="devices" type="single">
+            <option value="devices">Devices</option>
+            <option value="organizations">Organizations</option>
+            <option value="deviceGroups">Device Groups</option>
+            <option value="deviceTypes">Device Types</option>
+        </select>
+    </group>
+    <group name="dataEntityGroup">
+        <label name="labelDataEntityOrganizations" help="The Organization you would like to backup" parent="filter_name"
+               triggerValue="organizations">Organization
+        </label>
+        <entitySelect name="data_entity_organizations" placeholder="Organizations" type="single" parent="filter_name"
+                      triggerValue="organizations"></entitySelect>
+        <label name="labelDataEntityDeviceGroups" help="The Device Group you would like to backup" parent="filter_name"
+               triggerValue="deviceGroups">Device Group
+        </label>
+        <entitySelect name="data_entity_device_groups" placeholder="Device Groups" type="single" parent="filter_name"
+                      triggerValue="deviceGroups"></entitySelect>
+        <label name="labelDataEntityDeviceTypes" help="The Device Type you would like to backup" parent="filter_name"
+               triggerValue="deviceTypes">Device Types
+        </label>
+        <entitySelect name="data_entity_device_types" placeholder="Device Types" type="single" parent="filter_name"
+                      triggerValue="deviceTypes"></entitySelect>
+    </group>
+    <group name="AwsRegionInformation">
+        <label name="labelAwsRegion" help="The AWS region of your S3 bucket.">AWS Region</label>
+        <select name="awsRegion" placeholder="The AWS region of your S3 bucket." value="us-east-1"
+                type="single">
+            <option value="us-east-1">US East (N. Virginia)</option>
+            <option value="us-east-2">US East (Ohio)</option>
+            <option value="us-west-1">US West (N. California)</option>
+            <option value="us-west-2">US West (Oregon)</option>
+            <option value="ap-south-1">Asia Pacific (Mumbai)</option>
+            <option value="ap-northeast-2">Asia Pacific (Seoul)</option>
+            <option value="ap-northeast-3">Asia Pacific (Osaka-Local)</option>
+            <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+            <option value="ap-southeast-2">Asia Pacific (Sydney)</option>
+            <option value="ap-northeast-1">Asia Pacific (Tokyo)</option>
+            <option value="ca-central-1">Canada (Central)</option>
+            <option value="eu-central-1">Europe (Frankfurt)</option>
+            <option value="eu-west-1">Europe (Ireland)</option>
+            <option value="eu-west-2">Europe (London)</option>
+            <option value="eu-west-3">Europe (Paris)</option>
+            <option value="eu-north-1">Europe (Stockholm)</option>
+            <option value="sa-east-1">South America (São Paulo)</option>
+        </select>
+    </group>
+    <group name="s3Bucket">
+        <label name="labelBucket"
+               help="The unique name of your S3 bucket. Please note that the bucket has to exist for the plugin to work properly. For more help please see here: [https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html](Create a new S3 bucket).">
+            S3 Bucket Name
+        </label>
+        <input name="bucket_name" type="text" placeholder="yourS3BucketName"></input>
+    </group>
+    <group name="uploadPathGroup">
+        <label name="uploadPath"
+               help="The path inside your existing S3 bucket where the data should be uploaded to. Please note the path must not start or end with a '/' (slash).">
+            Upload
+            Path
+        </label>
+        <input name="upload_path" type="text" placeholder="/ubidots/backup"></input>
+    </group>
+    <group name="backupRangeGroup">
+        <label name="labelBackupRange"
+               help="The time range of the backup data.">
+            Date range
+        </label>
+        <select name="backup_range" placeholder="Backup time range" value="yesterday" type="single">
+            <option value="2D">Yesterday</option>
+            <option value="24H">Last 24 Hours</option>
+            <option value="168H">Last Week</option>
+            <option value="MS">This Month</option>
+            <option value="2MS">Previous Month</option>
+            <option value="7D">Last 7 Days</option>
+            <option value="30D">Last 30 Days</option>
+        </select>
+    </group>
+    <group name="backupFrequencyGroup">
+        <label name="labelBackupFrequencyGroup"
+               help="The frequency of the backup.">
+            Backup every
+        </label>
+        <select name="backup_frequency" placeholder="Backup every..." value="week" type="single">
+            <option value="day">Day</option>
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+        </select>
+    </group>
+    <group name="backupFrequencyMonthGroup">
+        <label name="labelBackupFrequencyMonth" parent="backup_frequency" triggerValue="month">On the</label>
+        <select name="backup_frequency_month_day" parent="backup_frequency" triggerValue="month" placeholder="1"
+                value="1" type="single">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+        <label name="labelBackupFrequencyWeek" parent="backup_frequency" triggerValue="week">On</label>
+        <select name="backup_frequency_week_day" parent="backup_frequency" triggerValue="week" placeholder="Monday"
+                value="monday" type="single">
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+        </select>
+    </group>
+    <group name="timepickerGroup">
+        <label name="labelTimepickerGroup" >At</label>
+        <timepicker name="backup_time" placeholder="06:00"></timepicker>
+    </group>
+    <group name="retentioFrequencyGroup">
+        <label name="label_memory_retention"
+               help="The time of data retention in memory storage to short term until 8766 hours.">
+            Retention data short term in hours
+        </label>
+            <input name="memory_retention" type="text" placeholder="Memory time retention"></input>
+        <label name="label_magnetic_retention"
+               help="The time of data retention in magnetic storage to long term until 73.000 days.">
+            Retention data long term in days
+        </label>
+            <input name="magnetic_retention" type="text" placeholder="Magnetic time retention"></input>
+    </group>
+</form>
