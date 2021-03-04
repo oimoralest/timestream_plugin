@@ -2,7 +2,7 @@ import boto3
 from zipfile import ZipFile
 import json
 import csv
-from data import memory_retention, magnetic_retention
+from retention_times import memory_retention, magnetic_retention
 
 
 def read_s3(Session, event):
