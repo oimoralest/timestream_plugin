@@ -143,12 +143,14 @@
         <label name="labelTimepickerGroup" >At</label>
         <timepicker name="backup_time" placeholder="06:00"></timepicker>
     </group>
-    <group name="retentioFrequencyGroup">
+    <group name="memoryRetentionGroup">
         <label name="label_memory_retention"
                help="The time of data retention in memory storage to short term until 8766 hours.">
             Retention data short term in hours
         </label>
             <input name="memory_retention" type="text" placeholder="Memory time retention"></input>
+    </group>
+    <group name="magneticRetentionGroup">
         <label name="label_magnetic_retention"
                help="The time of data retention in magnetic storage to long term until 73.000 days.">
             Retention data long term in days
