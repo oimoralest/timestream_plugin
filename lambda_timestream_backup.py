@@ -26,7 +26,8 @@ def read_s3(Session, event):
     s3 = Session.client('s3')
     # Get info from a new bucket object
     s3_bucket_object = event.get('Records')[0].get('s3').get('object')
-    s3_bucket_name = event.get('Records')[0].get('s3').get('bucket').get('name')
+    s3_bucket_name = event.get(
+        'Records')[0].get('s3').get('bucket').get('name')
     # Get the name of the zip File
     for item in s3_bucket_object.get('key').split('/'):
         if '.zip' in item:
@@ -99,16 +100,16 @@ def write_timestream(Session, records, t_name):
         Nothing
     """
     timestream = Session.client('timestream-write')
-    # Crea la base de datos si no existe
+    # Creates the database
     try:
         timestream.create_database(
             DatabaseName='ubidots_s3_backup'
         )
-    # Condicional para evaluar si existe la base de datos: botocore.exceptions.ConflictException
+    # Checks if the database already exists
     except timestream.exceptions.ConflictException:
         print('Database already exists')
         pass
-    # Crea la table si no existe
+    # Creates the table
     try:
         timestream.create_table(
             DatabaseName='ubidots_s3_backup',
@@ -118,7 +119,7 @@ def write_timestream(Session, records, t_name):
                 'MagneticStoreRetentionPeriodInDays': magnetic_retention
             }
         )
-    # Condicional para evaluar si existe la tabla: botocore.exceptions.ConflictException
+    # Checks if the table alreadyy exists
     except timestream.exceptions.ConflictException:
         print('Table already exists. Updating table properties')
         timestream.update_table(
@@ -129,18 +130,19 @@ def write_timestream(Session, records, t_name):
                 'MagneticStoreRetentionPeriodInDays': magnetic_retention
             }
         )
-    # Escribe los registros
+    # Write the records
     try:
         timestream.write_records(
                 DatabaseName='ubidots_s3_backup',
                 TableName=t_name,
                 Records=records
         )
-    # Ocurre cuando los datos no estan dentro del rango del tiempo de retencion
+    # If an error occur the error is printed as warning
     except timestream.exceptions.RejectedRecordsException as err:
         print('Warning: Some records were rejected. See RejectedRecords for \
         more information')
         print('RejectedRecords: ', err.response['RejectedRecords'])
+
 
 def lambda_handler(event, context):
     """lambda_handler method.
