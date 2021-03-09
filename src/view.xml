@@ -59,9 +59,8 @@
     </group>
     <group name="uploadPathGroup">
         <label name="uploadPath"
-               help="The path inside your existing S3 bucket where the data should be uploaded to. Please note the path must not start or end with a '/' (slash).">
-            Upload
-            Path
+               help="The path inside your existing S3 bucket where the data should be uploaded to. Please note the path must not start or end with a '/' (slash), each dataplugin has an unique path.">
+            Upload Path
         </label>
         <input name="upload_path" type="text" placeholder="/ubidots/backup"></input>
     </group>
@@ -145,16 +144,16 @@
     </group>
     <group name="memoryRetentionGroup">
         <label name="label_memory_retention"
-               help="The time of data retention in memory storage to short term until 8766 hours.">
-            Retention data short term in hours
+               help="The number of hours that data is stored in memory. The maximum is 8766 hours. It should be greater than the data points backup range">
+            Short-term Retention Period
         </label>
-            <input name="memory_retention" type="text" placeholder="Memory time retention"></input>
+            <input name="memory_retention" type="text" placeholder="In hours"></input>
     </group>
     <group name="magneticRetentionGroup">
         <label name="label_magnetic_retention"
-               help="The time of data retention in magnetic storage to long term until 73.000 days.">
-            Retention data long term in days
+               help="The number of days that data is stored in magnetic storage. The maximum is 73,000. It should be greater than the data points backup range">
+            Long-term Retention Period
         </label>
-            <input name="magnetic_retention" type="text" placeholder="Magnetic time retention"></input>
+            <input name="magnetic_retention" type="text" placeholder="In days"></input>
     </group>
 </form>
