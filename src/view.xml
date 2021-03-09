@@ -144,14 +144,14 @@
     </group>
     <group name="memoryRetentionGroup">
         <label name="label_memory_retention"
-               help="The number of hours that data is stored in memory. The maximum is 8766 hours. It should be greater than the data points backup range">
+               help="The number of hours that data is stored in memory. The maximum is 8766 hours. It should be greater than the data points backup range, for more help please see here: [https://docs.aws.amazon.com/timestream/latest/developerguide/ts-limits.html](TimeStream - limits).">
             Short-term Retention Period
         </label>
             <input name="memory_retention" type="text" placeholder="In hours"></input>
     </group>
     <group name="magneticRetentionGroup">
         <label name="label_magnetic_retention"
-               help="The number of days that data is stored in magnetic storage. The maximum is 73,000. It should be greater than the data points backup range">
+               help="The number of days that data is stored in magnetic storage. The maximum is 73,000. It should be greater than the data points backup range, for more help please see here: [https://docs.aws.amazon.com/timestream/latest/developerguide/ts-limits.html](TimeStream - limits).">
             Long-term Retention Period
         </label>
             <input name="magnetic_retention" type="text" placeholder="In days"></input>
