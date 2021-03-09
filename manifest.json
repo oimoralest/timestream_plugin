@@ -1,10 +1,8 @@
 {
-    "version": "0.1.1",
+    "version": "0.0.1",
     "runtime": "python:3.7",
     "environment": {},
-    "plugin_type": "webhook",
-    "default_http_method": "GET",
-    "allowed_http_methods": ["GET", "POST"],
+    "plugin_type": "cron",
     "auth": "AWS_IAM",
     "interval": 1,
     "license_name": "MIT",
