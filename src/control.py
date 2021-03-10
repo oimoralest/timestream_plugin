@@ -5,7 +5,7 @@ from datetime import date
 from os import remove
 from time import sleep
 from zipfile import ZipFile
-
+import botocore
 import boto3
 import requests
 
@@ -127,7 +127,7 @@ def login(aws_credentials, region_name):
     try:
         sts = session.client('sts')
         user_id = sts.get_caller_identity()['Account']
-    except sts.exceptions.NoCredentialsError:
+    except botocore.exceptions.NoCredentialsError:
         return None, None
 
     print('[login] session', session)
@@ -260,8 +260,8 @@ def prepare_code(memory_retention, magnetic_retention, table_name):
         file.write('table_name = {}'.format(table_name))
     # Change for real URL
     response = requests.get("""https://raw.githubusercontent.com/oimoralest/"""
-                            """timestream_plugin/oscar/lambda_timestream_b"""
-                            """ackup.py?token=APW3MKGCZ2CME7HOLI2HO23AJ7FAE""")
+                            """timestream_plugin/main/lambda_timestream_back"""
+                            """up.py?token=APW3MKETIE7QXYLAKK2UPP3AKIMMU""")
     if response.status_code != 200:
         return None
     code = response.text
