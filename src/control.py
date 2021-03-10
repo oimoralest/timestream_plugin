@@ -9,18 +9,6 @@ import botocore
 import boto3
 import requests
 
-kwargs = {
-    "aws_credentials": {
-        "aws_access_key_id": "AKIATLNYSVJY5M4QHW7P",
-        "aws_secret_access_key": "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",
-    },
-    "awsRegion": "us-east-1",
-    "memory_retention": "720",
-    "magnetic_retention": "30",
-    "bucket_name": "test-holberton",
-    "upload_path": "ubidots",
-    "table_name": "table_name",
-}
 
 GITHUB_TOKEN = "APW3MKEELNFUJM2WUTCKDYLAKJ5XM"
 
@@ -67,7 +55,7 @@ def setup(kwargs):
         session, user_id, role_name, zip_file)
     if lambda_function_name is None:
         return {"status": 400, "message": "Lambda function could not be \
-                created"}
+                created or already exists"}
     # Configures the s3 trigger
     response = configure_s3_trigger(
         session, lambda_function_name, user_id, bucket_name, upload_path,
@@ -119,8 +107,9 @@ def login(aws_credentials, region_name):
     try:
         sts = session.client("sts")
         user_id = sts.get_caller_identity()["Account"]
-    except botocore.exceptions.NoCredentialsError and \
-            botocore.exceptions.ClientError:
+    except botocore.exceptions.NoCredentialsError:
+        return None, None
+    except botocore.exceptions.ClientError:
         return None, None
     print("[login] session", session)
     return session, user_id
@@ -236,8 +225,8 @@ def create_role(session, user_id, bucket_name):
         while status != 200 and attempts < 5:
             response = iam.attach_role_policy(
                 RoleName=role_name,
-                PolicyArn="arn:aws:iam::{}:policy/ubidots_s3_timestream"\
-                    .format(user_id),
+                PolicyArn="arn:aws:iam::{}:policy/ubidots_s3_timestream"
+                          .format(user_id),
             )
             status = response.get("ResponseMetadata").get("HTTPStatusCode")
             attempts += 1
@@ -272,8 +261,8 @@ def prepare_code(memory_retention, magnetic_retention, table_name):
     # Change for real URL
     response = requests.get(
         """https://raw.githubusercontent.com/oimoralest/"""
-        """timestream_plugin/main/src/lambda_timestream_backup.py?token={}""".\
-            format(GITHUB_TOKEN),)
+        """timestream_plugin/main/src/lambda_timestream_backup.py?token={}"""
+        .format(GITHUB_TOKEN),)
     if response.status_code != 200:
         return None
     code = response.text
@@ -386,5 +375,4 @@ def configure_s3_trigger(
         )
     except Exception:
         return "Error"
-
-setup(kwargs)
+    return None
