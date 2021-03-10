@@ -82,14 +82,15 @@ def read_s3(Session, event):
 
 
 def write_timestream(Session, records, t_name):
-    """
-    This method write records on AWS timestream
+    """This method write records on AWS timestream
+
     Args:
         Session: boto3 Session that allows to create service clients and
         resources
         records: data to be stored in AWS timestream
         t_name: table name to be created in AWS timestream inside
         ubidots_s3_backup
+
     Returns:
         Nothing
     """
@@ -140,8 +141,8 @@ def write_timestream(Session, records, t_name):
 
 
 def lambda_handler(event, context):
-    """
-    This method is the handler for the AWS Lambda function
+    """This method is the handler for the AWS Lambda function
+
     Args:
         event: Information about the object set in the trigger
         context: LambdaContext Object
