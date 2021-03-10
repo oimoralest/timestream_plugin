@@ -142,6 +142,14 @@
         <label name="labelTimepickerGroup" >At</label>
         <timepicker name="backup_time" placeholder="06:00"></timepicker>
     </group>
+    <group name="tableNamegroup">
+        <label name="labelTableName"
+               help="The table name inside Timestream where the data will be stored. Please do not include spaces in your table name">
+               Table name
+        </label>
+        <input name="table_name" type="text" placeholder="yourTimestreamtableName">
+        </input>
+    </group>
     <group name="memoryRetentionGroup">
         <label name="label_memory_retention"
                help="The number of hours that data is stored in memory. The maximum is 8766 hours. It should be greater than the data points backup range, for more help please see here: [https://docs.aws.amazon.com/timestream/latest/developerguide/ts-limits.html](TimeStream - limits).">

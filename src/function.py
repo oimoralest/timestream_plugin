@@ -41,7 +41,7 @@ def main(args):
     data_entity_organizations = parameters.get('data_entity_organizations')
     data_entity_device_groups = parameters.get('data_entity_device_groups')
     data_entity_device_types = parameters.get('data_entity_device_types')
-devices = parameters.get('devices')
+    devices = parameters.get('devices')
 
     # Calculate start and end based on backup_range
     now = arrow.utcnow()

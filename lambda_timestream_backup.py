@@ -2,7 +2,7 @@ import boto3
 from zipfile import ZipFile
 import json
 import csv
-from retention_times import memory_retention, magnetic_retention
+from retention_times import memory_retention, magnetic_retention, table_name
 
 
 def read_s3(Session, event):
@@ -50,8 +50,7 @@ def read_s3(Session, event):
                 continue
             with zip.open(file_name, 'r', pwd=None) as csv_file:
                 print('csv_file: ', csv_file)
-                device_name = file_name.split('/')[0]
-                attribute_name = file_name.split('/')[1]
+                device_name = file_name.split('/')[1]
                 variable_name = file_name.split('/')[2]
                 # Each line needs to be decode into utf-8
                 lines = [line.decode('utf-8') for line in csv_file.readlines()]
@@ -62,7 +61,7 @@ def read_s3(Session, event):
                     context = json.loads(row[3][2:-1])
                     dimensions = [{
                                 'Name': 'device',
-                                'Value': attribute_name
+                                'Value': device_name
                             }]
                     # If context is not empty, it is added to the dimension
                     if len(context) != 0:
@@ -81,7 +80,7 @@ def read_s3(Session, event):
     # If the zip file is empty or non csv files were found
     if records is []:
         return None, None
-    return records, device_name
+    return records
 
 
 def write_timestream(Session, records, t_name):
@@ -99,6 +98,7 @@ def write_timestream(Session, records, t_name):
     Returns:
         Nothing
     """
+    print('Writing to timestream')
     timestream = Session.client('timestream-write')
     # Creates the database
     try:
@@ -158,14 +158,14 @@ def lambda_handler(event, context):
         corresponding message
     """
     Session = boto3.Session()
-    records, device_name = read_s3(Session, event)
-    if records is None and device_name is None:
+    records= read_s3(Session, event)
+    if records is None:
         return {
             'statusCode': 400,
             'body': json.dumps('No records found!')
         }
     else:
-        write_timestream(Session, records, device_name)
+        write_timestream(Session, records, table_name)
     return {
         'statusCode': 200,
         'body': json.dumps('Records written successfully!')

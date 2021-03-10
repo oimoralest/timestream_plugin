@@ -18,7 +18,8 @@ kwargs = {
     'memory_retention': '720',
     'magnetic_retention': '30',
     'bucket_name': 'test-holberton',
-    'upload_path': 'ubidots'
+    'upload_path': 'ubidots',
+    'table_name': 'table_name'
 }
 
 
@@ -47,6 +48,8 @@ def setup(kwargs):
     print('bucket_name', bucket_name)
     upload_path = kwargs.get('upload_path')
     print('upload_path', upload_path)
+    table_name = kwargs.get('table_name')
+    print('table_name', table_name)
 
     # Login
     Session, user_id = login(aws_credentials, region_name)
@@ -59,7 +62,7 @@ def setup(kwargs):
         return {'status': 400, 'message': 'Role could not be created'}
 
     # Prepare code for lambda function
-    zip_file = prepare_code(memory_retention, magnetic_retention)
+    zip_file = prepare_code(memory_retention, magnetic_retention, table_name)
     if zip_file is None:
         return {'status': 400, 'message': 'Code is not available to be used'}
 
@@ -118,7 +121,7 @@ def login(aws_credentials, region_name):
     session = boto3.session.Session(
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
-        # aws_session_token=aws_session_token,
+        aws_session_token=aws_session_token,
         region_name=region_name
     )
     try:
@@ -236,7 +239,7 @@ def create_role(Session, user_id, bucket_name):
     return role_name
 
 
-def prepare_code(memory_retention, magnetic_retention):
+def prepare_code(memory_retention, magnetic_retention, table_name):
     """Method that prepares the lambda function, to be deployed in AWS
     adding the memory retention and magenetic retention parameters.
 
@@ -253,7 +256,8 @@ def prepare_code(memory_retention, magnetic_retention):
     print('Inside preparing code')
     with open('retention_times.py', 'a') as file:
         file.write('memory_retention = {} \n'.format(memory_retention))
-        file.write('magnetic_retention = {}'.format(magnetic_retention))
+        file.write('magnetic_retention = {} \n'.format(magnetic_retention))
+        file.write('table_name = {}'.format(table_name))
     # Change for real URL
     response = requests.get("""https://raw.githubusercontent.com/oimoralest/"""
                             """timestream_plugin/oscar/lambda_timestream_b"""
