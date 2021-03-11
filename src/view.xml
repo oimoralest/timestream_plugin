@@ -143,12 +143,11 @@
         <timepicker name="backup_time" placeholder="06:00"></timepicker>
     </group>
     <group name="tableNamegroup">
-        <label name="labelTableName"
+        <label name="label_memory_retention"
                help="The table name inside Timestream where the data will be stored. Please do not include spaces in your table name">
-               Table name
+            Table name
         </label>
-        <input name="table_name" type="text" placeholder="yourTimestreamtableName">
-        </input>
+            <input name="table_name" type="text" placeholder="yourTimestreamtableName"></input>
     </group>
     <group name="memoryRetentionGroup">
         <label name="label_memory_retention"
