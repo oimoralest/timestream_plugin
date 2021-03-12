@@ -10,7 +10,7 @@ import boto3
 import requests
 
 
-GITHUB_TOKEN = "APW3MKEELNFUJM2WUTCKDYLAKJ5XM"
+GITHUB_URL = "https://raw.githubusercontent.com/oimoralest/timestream_plugin/main/src/lambda_timestream_backup.py?token=APW3MKEELNFUJM2WUTCKDYLAKJ5XM"
 
 
 def setup(kwargs):
@@ -165,11 +165,7 @@ def create_role(session, user_id, bucket_name):
     try:
         attempts, status = 0, 400
         sleep(1)
-        while status != 200 and attempts < 5:
-            response = iam.create_policy(
-                PolicyName="ubidots_s3_timestream",
-                PolicyDocument=json.dumps(
-                    {
+        policy_document={
                         "Version": "2012-10-17",
                         "Statement": [
                             {
@@ -209,7 +205,10 @@ def create_role(session, user_id, bucket_name):
                             },
                         ],
                     }
-                ),
+        while status != 200 and attempts < 5:
+            response = iam.create_policy(
+                PolicyName="ubidots_s3_timestream",
+                PolicyDocument=json.dumps(policy_document),
                 Description="""Policy to get an object from s3 and write it"""
                 """ into TimeStream""",
             )
@@ -259,10 +258,7 @@ def prepare_code(memory_retention, magnetic_retention, table_name):
         file.write("magnetic_retention = {} \n".format(magnetic_retention))
         file.write("table_name = '{}'".format(table_name))
     # Change for real URL
-    response = requests.get(
-        """https://raw.githubusercontent.com/oimoralest/"""
-        """timestream_plugin/main/src/lambda_timestream_backup.py?token={}"""
-        .format(GITHUB_TOKEN),)
+    response = requests.get(GITHUB_URL,)
     if response.status_code != 200:
         return None
     code = response.text
