@@ -1,6 +1,6 @@
 # DATAPLUGIN TIMESTREAM
 
-# ![Cover](https://github.com/oimoralest/timestream_plugin/images/product_cover.png)
+# ![DataPlugin](https://github.com/oimoralest/timestream_plugin/blob/main/images/product_cover.png)
 
 
 ## Description
@@ -33,7 +33,7 @@
 
 > Below, we present the general infrastructure of this project, which was carried out as a final project for Holberton School to the Ubidots company.
 
-# ![Infrastructure](https://github.com/oimoralest/timestream_ubidots/images/infraestructure.png)
+# ![Infrastructure](https://github.com/oimoralest/timestream_plugin/blob/main/images/infraestructure.png)
 
 ## Usage
 
@@ -45,12 +45,10 @@ Read more : (https://github.com/oimoralest/timestream_ubidots/documentation.pdf)
 
 ## Team
 > Laura Álvarez - Manager Engineer and Full Stack Developer (apla02@gmail.com)<br>
-Fabian Carmona - Product Design Engineer (carmona.vargas.fabian@gmail.com)<br>
+Fabian Carmona - Product Design Engineer and Full Stack Developer (carmona.vargas.fabian@gmail.com)<br>
 Luis Carvajal - Mechatronic Engineer Stud. and Full Stack Developer (luiscarvajal05@gmail.com)<br>
 Luis Calderón Mechanical Engineer and Full Stack Developer (luismiguel.calderone@gmail.com)<br>
 Óscar Morales - Chemical Engineer and Full Stack Developer (oimoralest@gmail.com)
 
 ## License
 **MIT License** - Copyright (c) 2021 Ubidots 
-
-
