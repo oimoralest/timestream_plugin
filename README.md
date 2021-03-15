@@ -1,6 +1,6 @@
 # DATAPLUGIN TIMESTREAM
 <div align="center">
-# ![DataPlugin](https://github.com/oimoralest/timestream_plugin/blob/main/images/product_cover.png)
+<img src="https://github.com/oimoralest/timestream_plugin/blob/main/images/product_cover.png" alt="Dataplugin"/>
 </div>
 
 
