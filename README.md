@@ -14,7 +14,7 @@
 > - Boto3 (SDK for python)
 > - JSON
 > - XML
-> - Lambda Function
+> - AWS Lambda Function
 > - AWS Cloudwatch
 > - AWS S3
 > - AWS Timestream
@@ -24,7 +24,7 @@
 | FILES | DESCRIPTION |
 | ----- | ----------- |
 | src/control.py | <p> Contains the functions:<blockquote>**setup**: Set all the variables to execute the dataplugin. <br><br>**login**: Use the kwargs to log into the user's AWS account. <br><br>**create_role**: Creates IAM role( permissions for AWS services) </p>|
-| src/function.py |<p> Contains the fucntions:<blockquote> **main**: Principal function that takes  AWS data, timezone data,  backup time data and set up parameters object.<br><br>**make_request**: Make a request to the ubidots server.<br><br>**get_time_frame**: Get a given time frame based on the actual time passed by the user.<br><br>**get_last_month_time_frame**: First date of the last month.</p>|
+| src/function.py |<p> Contains the functions:<blockquote> **main**: Principal function that takes  AWS data, timezone data,  backup time data and set up parameters object.<br><br>**make_request**: Make a request to the ubidots server.<br><br>**get_time_frame**: Get a given time frame based on the actual time passed by the user.<br><br>**get_last_month_time_frame**: First date of the last month.</p>|
 | src/lambda_timestream_backup.py |<p> Contains the functions: <blockquote>**read_s3**: Gets an object from an AWS S3 bucket and prepares the data stored (AWS Timestream). <br><br>**write_timestream**: Write records on AWS timestream. <br><br>**lambda_handler**: Handler for the AWS Lambda function.  </p>
 | src/view.xml | <blockquote>Contains the form with the fields required for the plugin working.|
 | manifest.json | <blockquote>Describes essential information about the plugin |
