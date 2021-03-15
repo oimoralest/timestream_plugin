@@ -6,7 +6,7 @@
 
 ## Description
 
-> Due to the needs in the analysis of this information, we develop a dataplugin that allows to articulate the information collected by the company through the devices, performing a periodic backup in an S3 bucket that is migrated to a database from AWS Timestream and thus, improve the compatibility of the data for its integration with the rest of the services offered by Amazon Web Services and other services such as Grafana.
+> Due to the needs in the analysis of the information obtained from devices' users, we develop a dataplugin that allows to articulate the information collected by the company through the devices, performing a periodic backup in an S3 bucket that is migrated to a database from AWS Timestream and thus, improve the compatibility of the data for its integration with the rest of the services offered by Amazon Web Services and other services such as Grafana.
 
 ## Technologies
 
@@ -14,9 +14,10 @@
 > - Boto3 (SDK for python)
 > - JSON
 > - XML
+> - Lambda Function
 > - AWS Cloudwatch
-> - AWS S3 (Storage)
-> - AWS Timestream (Time series data base)
+> - AWS S3
+> - AWS Timestream
 
 ## Table of contents
 
