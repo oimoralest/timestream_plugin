@@ -1,4 +1,4 @@
-# DATAPLUGIN TIMESTREAM
+<h1 align="center"> DATAPLUGIN TIMESTREAM </h1>
 <div align="center">
 <img src="https://github.com/oimoralest/timestream_plugin/blob/main/images/product_cover.png" alt="Dataplugin"/>
 </div>
