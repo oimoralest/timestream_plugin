@@ -1,9 +1,9 @@
-import arrow
-import datetime
 import json
+from calendar import monthrange
+
+import arrow
 import requests
 import time
-from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 
 
@@ -12,8 +12,7 @@ def main(args):
     parameters = args.get('_parameters')
     print('parameters', parameters)
     # Extract parameters
-    ubidots_token = parameters.get('ubidots_token')
-    plugin_version_id = parameters.get('plugin_version_id')
+    ubidots_token = parameters.get('token')
 
     # AWS Data
     bucket_name = parameters.get('bucket_name')
@@ -24,24 +23,18 @@ def main(args):
 
     # Timezone Data
     time_zone = parameters.get('time_zone')
-    backup_range = parameters.get('backup_range')
 
     # Backup Time Data
-    backup_frequency = parameters.get('backup_frequency')
-    backup_time = parameters.get('backup_time')
-    backup_frequency_month = parameters.get('backup_frequency_month')
-    backup_frequency_week = parameters.get('backup_frequency_week')
     backup_range = parameters.get('backup_range')
 
     # Zip or CSV - Future Use
-    compress = parameters.get('compress')
+    # compress = parameters.get('compress')
 
     # Data Entity Data
     filter_name = parameters.get('filter_name')
     data_entity_organizations = parameters.get('data_entity_organizations')
     data_entity_device_groups = parameters.get('data_entity_device_groups')
     data_entity_device_types = parameters.get('data_entity_device_types')
-    devices = parameters.get('devices')
 
     # Calculate start and end based on backup_range
     now = arrow.utcnow()
@@ -53,30 +46,23 @@ def main(args):
     # Set up parameters object
     parameters = {'start': start * 1000,
                   'end': end * 1000,
-                  'bucket_name': bucket_name,
-                  'aws_region': aws_region,
-                  'time_zone': time_zone,
-                  'backup_frequency': backup_frequency,
-                  'backup_time': backup_time,
-                  'backup_frequency_month': backup_frequency_month,
-                  'backup_frequency_week': backup_frequency_week,
-                  'backup_range': backup_range,
-                  'upload_path': upload_path,
-                  'filter_name': filter_name,
-                  'data_entity_organizations': data_entity_organizations,
-                  'data_entity_device_groups': data_entity_device_groups,
-                  'data_entity_device_types': data_entity_device_types,
-                  'devices': devices,
-                  'iam_account': iam_account,
-                  'role_trusted': role_trusted,
-                  'plugin_version_id': plugin_version_id}
+                  'bucketName': bucket_name,
+                  'awsRegion': aws_region,
+                  'tz': time_zone,
+                  'uploadPath': upload_path,
+                  'filterName': filter_name,
+                  'dataEntityOrganizations': data_entity_organizations,
+                  'dataEntityDeviceGroups': data_entity_device_groups,
+                  'dataEntityDeviceTypes': data_entity_device_types,
+                  'iamAccount': iam_account,
+                  'roleTrusted': role_trusted}
 
     json_parameters = json.dumps(parameters)
     print('parameters', parameters)
     print('json_parameters', json_parameters)
     # Make request to Ubidots backup endpoint
-    # url = 'https://industrial.api.ubidots.com/api/-/account/_/export-data/'
-    url = 'https://enpndx4nvztv.x.pipedream.net'
+    url = 'https://industrial.api.ubidots.com/api/-/account/_/export-data/'
+    # url = 'https://enpndx4nvztv.x.pipedream.net'
     headers = {'X-Auth-Token': ubidots_token, 'Content-Type': 'application/json'}
 
     make_request(url, headers, attempts=3, http_method='POST', data=json_parameters)
