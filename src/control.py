@@ -1,7 +1,7 @@
 """This module setup the data plugin
 """
 import json
-from datetime import date
+from datetime import datetime
 from os import remove
 from time import sleep
 from zipfile import ZipFile
@@ -10,7 +10,7 @@ import boto3
 import requests
 
 
-GITHUB_URL = "https://raw.githubusercontent.com/oimoralest/timestream_plugin/main/src/lambda_timestream_backup.py?token=APW3MKEELNFUJM2WUTCKDYLAKJ5XM"
+GITHUB_URL = "https://f001.backblazeb2.com/file/woakas/public/lambda_timestream_backup.py"
 
 
 def setup(kwargs):
@@ -40,19 +40,23 @@ def setup(kwargs):
     print("table_name", table_name)
     # Login
     session, user_id = login(aws_credentials, region_name)
+    print("session, user_id",session, user_id)
     if session is None:
         return {"status": 400, "message": "Unable to locate credentials"}
     # Creates role for lambda with s3 and timestream policies
     role_name = create_role(session, user_id, bucket_name)
+    print("role_name",role_name)
     if role_name is None:
         return {"status": 400, "message": "Role could not be created"}
     # Prepares code for lambda function
     zip_file = prepare_code(memory_retention, magnetic_retention, table_name)
+    print("-> zip_file", zip_file)
     if zip_file is None:
         return {"status": 400, "message": "Code is not available to be used"}
     # Creates lambda function
     lambda_function_name = create_lambda_function(
         session, user_id, role_name, zip_file)
+    print("lambda_function_name",lambda_function_name)
     if lambda_function_name is None:
         return {"status": 400, "message": "Lambda function could not be \
                 created or already exists"}
@@ -60,6 +64,7 @@ def setup(kwargs):
     response = configure_s3_trigger(
         session, lambda_function_name, user_id, bucket_name, upload_path,
         region_name)
+    print("response from configure s3 trigger", response)
     if response == "Error":
         return {"status": 400, "message": "Trigger could not be configured"}
     return {"status": 200, "message": "Control.py successfully executed"}
@@ -77,7 +82,7 @@ def login(aws_credentials, region_name):
         * boto3 session: allows to create service clients and use resources
         * user_id: AWS user's id
     """
-    print("Inside login function")
+    print("Inside login function", aws_credentials, region_name)
     if aws_credentials is not None:
         aws_access_key_id = (
             aws_credentials.get("AccessKeyId")
@@ -104,14 +109,17 @@ def login(aws_credentials, region_name):
         aws_session_token=aws_session_token,
         region_name=region_name,
     )
+    print("session", session)
     try:
         sts = session.client("sts")
         user_id = sts.get_caller_identity()["Account"]
-    except botocore.exceptions.NoCredentialsError:
+        print("user_id", user_id)
+    except botocore.exceptions.NoCredentialsError as err:
+        print("inside NoCredentialsError", err)
         return None, None
-    except botocore.exceptions.ClientError:
+    except botocore.exceptions.ClientError as err:
+        print("inside ClientError", err)
         return None, None
-    print("[login] session", session)
     return session, user_id
 
 
@@ -153,12 +161,14 @@ def create_role(session, user_id, bucket_name):
                     }
                 ),
             )
+            print("response in creating role", response)
             status = response.get("ResponseMetadata").get("HTTPStatusCode")
             attempts += 1
     except iam.exceptions.EntityAlreadyExistsException:
         print("Role already exists. Returning: {}".format(role_name))
         return role_name
-    except Exception:
+    except Exception as err:
+        print("err in create role", err)
         return None
     # Creates policy document taking into account the Bucket's name defined
     # by the user
@@ -212,10 +222,11 @@ def create_role(session, user_id, bucket_name):
                 Description="""Policy to get an object from s3 and write it"""
                 """ into TimeStream""",
             )
+            print("response in create_policy", response)
             status = response.get("ResponseMetadata").get("HTTPStatusCode")
             attempts += 1
-    except Exception:
-        print('HERE')
+    except Exception as err:
+        print("error in create policy ", err)
         return None
     # Attaches the policy document to the role created
     try:
@@ -230,7 +241,7 @@ def create_role(session, user_id, bucket_name):
             status = response.get("ResponseMetadata").get("HTTPStatusCode")
             attempts += 1
     except Exception as err:
-        print(err)
+        print("error in attach role policy", err)
         return None
     # Awaits for AWS services to update
     sleep(7)
@@ -259,6 +270,7 @@ def prepare_code(memory_retention, magnetic_retention, table_name):
         file.write("table_name = '{}'".format(table_name))
     # Change for real URL
     response = requests.get(GITHUB_URL,)
+    print("response from github", response)
     if response.status_code != 200:
         return None
     code = response.text
@@ -290,8 +302,9 @@ def create_lambda_function(session, user_id, role_name, zip_file):
     print("Inside creating lambda function")
     aws_lambda = session.client("lambda")
     lambda_function_name = "lambda_ubidots_timestream_{}".format(
-        date.today().strftime("%m_%d_%Y_%H_%M_%S_%f")
+        datetime.today().strftime("%m_%d_%Y_%H_%M_%S_%f")
     )
+    print("lambda_function_name",lambda_function_name)
     try:
         with open(zip_file, "rb") as file:
             aws_lambda.create_function(
@@ -302,8 +315,10 @@ def create_lambda_function(session, user_id, role_name, zip_file):
                 Code={
                     "ZipFile": file.read(),
                 },
+                Timeout=900,
             )
-    except Exception:
+    except Exception as err:
+        print("error in create lambda function", err)
         remove("lambda_base_code.zip")
         return None
     remove("lambda_base_code.zip")
@@ -342,7 +357,8 @@ def configure_s3_trigger(
             Principal="s3.amazonaws.com",
             SourceArn="arn:aws:s3:::{}".format(bucket_name),
         )
-    except Exception:
+    except Exception as err:
+        print("error in add permission", err)
         return None
     try:
         s3.put_bucket_notification_configuration(
@@ -369,6 +385,7 @@ def configure_s3_trigger(
                 ]
             },
         )
-    except Exception:
+    except Exception as err:
+        print("err in put bucket notification configuration", err)
         return "Error"
     return None
