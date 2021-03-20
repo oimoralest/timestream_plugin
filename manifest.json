@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "0.2.9",
     "runtime": "python:3.7",
     "environment": {},
     "plugin_type": "cron",
@@ -7,5 +7,5 @@
     "interval": 1,
     "license_name": "MIT",
     "price": 0,
-    "aws_policy_statement": "aws_s3_upload_policy"
+    "aws_policy_statement": "aws_timestream_backup_policy"
 }
