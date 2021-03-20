@@ -142,6 +142,12 @@
         <label name="labelTimepickerGroup" >At</label>
         <timepicker name="backup_time" placeholder="06:00"></timepicker>
     </group>
+    <group name="ubidotsInformation">
+        <group name="fieldToken">
+            <label name="labelToken">Ubidots Token</label>
+            <token name="token" placeholder="Select Token"/>
+        </group>
+    </group>
     <group name="tableNamegroup">
         <label name="label_memory_retention"
                help="The table name inside Timestream where the data will be stored. Please do not include spaces in your table name">
