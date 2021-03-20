@@ -3,6 +3,7 @@ from zipfile import ZipFile
 import json
 import csv
 from retention_times import memory_retention, magnetic_retention, table_name
+from math import ceil
 
 
 def read_s3(Session, event):
@@ -19,7 +20,7 @@ def read_s3(Session, event):
         the records to be stored and the name of the table to be create in
         timestream or None on error
     """
-    print('Reading s3', event)
+    print('Reading s3')
     # Creates a s3 client
     s3 = Session.client('s3')
     # Get info from a new bucket object
@@ -72,7 +73,7 @@ def read_s3(Session, event):
                     records.append({
                         'Dimensions': dimensions,
                         'MeasureName': variable_name,
-                        'MeasureValue': row[2],
+                        'MeasureValue': str(row[2]),
                         'Time': row[0],
                     })
     # If the zip file is empty or no csv files were found
@@ -95,9 +96,11 @@ def write_timestream(Session, records, t_name):
         Nothing
     """
     print('Writing to timestream')
+    print('Number of records:', len(records))
     timestream = Session.client('timestream-write')
     # Creates the database
     try:
+        print('Creating Database')
         timestream.create_database(
             DatabaseName='ubidots_s3_backup'
         )
@@ -107,6 +110,7 @@ def write_timestream(Session, records, t_name):
         pass
     # Creates the table
     try:
+        print('Creating table')
         timestream.create_table(
             DatabaseName='ubidots_s3_backup',
             TableName=t_name,
@@ -128,12 +132,21 @@ def write_timestream(Session, records, t_name):
         )
     # Write the records
     try:
-        timestream.write_records(
-                DatabaseName='ubidots_s3_backup',
-                TableName=t_name,
-                Records=records
-        )
+        calls = ceil(len(records) / 100)
+        print('Calls:', calls)
+        for i in range(calls):
+            timestream.write_records(
+                    DatabaseName='ubidots_s3_backup',
+                    TableName=t_name,
+                    Records=records[100 * i:100 * (i + 1)]
+            )
     # If an error occurs the error is printed as warning
+    except IndexError:
+        timestream.write_records(
+                    DatabaseName='ubidots_s3_backup',
+                    TableName=t_name,
+                    Records=records[100 * i:]
+            )
     except timestream.exceptions.RejectedRecordsException as err:
         print('Warning: Some records were rejected. See RejectedRecords for \
         more information')
